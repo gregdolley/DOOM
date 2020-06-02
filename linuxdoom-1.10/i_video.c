@@ -164,8 +164,11 @@ int xlatekey(void)
 void I_ShutdownGraphics(void)
 {
   // Detach from X server
-  if (!XShmDetach(X_display, &X_shminfo))
-	    I_Error("XShmDetach() failed in I_ShutdownGraphics()");
+  if(doShm) 
+  {
+	if (!XShmDetach(X_display, &X_shminfo))
+			I_Error("XShmDetach() failed in I_ShutdownGraphics()");
+  }
 
   // Release shared memory.
   shmdt(X_shminfo.shmaddr);
@@ -689,6 +692,8 @@ void grabsharedmemory(int size)
 	  (int) (image->data));
 }
 
+#include <GL/glx.h> // ***TEST***
+
 void I_InitGraphics(void)
 {
 
@@ -756,6 +761,8 @@ void I_InitGraphics(void)
 	    I_Error("bad -geom parameter");
     }
 
+	printf("Try XOpenDisplay on DISPLAY: %s...\r\n", displayname);
+
     // open the display
     X_display = XOpenDisplay(displayname);
     if (!X_display)
@@ -766,14 +773,37 @@ void I_InitGraphics(void)
 	    I_Error("Could not open display (DISPLAY=[%s])", getenv("DISPLAY"));
     }
 
+//--------------------------
+static int attributeList[] = { GLX_RGBA, None };
+
+XVisualInfo *vi = glXChooseVisual(X_display, DefaultScreen(X_display), attributeList);
+if (!vi) {I_Error("No suitable visual"); return;}
+fprintf(stdout, "----------------------\r\n");
+fprintf(stdout, "Bits per pixel = %i\r\n", vi->bits_per_rgb);
+fprintf(stdout, "Class = %i\r\n", vi->class);
+fprintf(stdout, "vi->colormap_size = %i\r\n", vi->colormap_size);
+fprintf(stdout, "vi->depth = %i\r\n", vi->depth);
+fprintf(stdout, "vi->screen = %i\r\n", vi->screen);
+fprintf(stdout, "----------------------\r\n");
+//--------------------------
+
     // use the default visual 
     X_screen = DefaultScreen(X_display);
     if (!XMatchVisualInfo(X_display, X_screen, 8, PseudoColor, &X_visualinfo))
+    {
+fprintf(stdout, "----------------------\r\n");
+fprintf(stdout, "Bits per RGB = %i\r\n", X_visualinfo.bits_per_rgb);
+fprintf(stdout, "Class = %i\r\n", X_visualinfo.class);
+fprintf(stdout, "vi->colormap_size = %i\r\n", X_visualinfo.colormap_size);
+fprintf(stdout, "vi->depth = %i\r\n", X_visualinfo.depth);
+fprintf(stdout, "vi->screen = %i\r\n", X_visualinfo.screen);
+fprintf(stdout, "----------------------\r\n");
 	I_Error("xdoom currently only supports 256-color PseudoColor screens");
+    }
     X_visual = X_visualinfo.visual;
 
     // check for the MITSHM extension
-    doShm = XShmQueryExtension(X_display);
+    doShm = false;//XShmQueryExtension(X_display);
 
     // even if it's available, make sure it's a local connection
     if (doShm)
@@ -811,7 +841,7 @@ void I_InitGraphics(void)
 					x, y,
 					X_width, X_height,
 					0, // borderwidth
-					8, // depth
+					24, // depth
 					InputOutput,
 					X_visual,
 					attribmask,
@@ -897,7 +927,7 @@ void I_InitGraphics(void)
     {
 	image = XCreateImage(	X_display,
     				X_visual,
-    				8,
+    				24,
     				ZPixmap,
     				0,
     				(char*)malloc(X_width * X_height),
