@@ -6,9 +6,9 @@
 #
 CC=  gcc  # gcc or g++
 
-CFLAGS=-g -Wall -DNORMALUNIX -DLINUX -m32 # -DUSEASM 
-LDFLAGS=-L/usr/X11R6/lib
-LIBS=-L/usr/lib/i386-linux-gnu/ #-lXext -lX11 -lnsl -lm 
+CFLAGS=-g -Wall -DNORMALUNIX -DLINUX -m32 -include /usr/include/errno.h # -DUSEASM 
+LDFLAGS=-L/usr/lib -L/usr/lib/i386-linux-gnu/ -L../sndserv/linux/ #/usr/X11R6/lib
+LIBS=-lXext -lX11 -lnsl -lm -lGL
 
 # subdirectory for objects
 O=linux
