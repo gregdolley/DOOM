@@ -1,3 +1,27 @@
+----------------------------------------------------------------------
+5/31/2020
+
+My attempt to get DOOM running on Ubuntu 18.04 LTS under WSL2 for 
+Windows 10.
+
+I know there's the OpenDL "doomsday" port of DOOM 
+(http://manpages.ubuntu.com/manpages/xenial/man6/doomsday.6.html)
+which was pretty easy to get running on WSL2 Ubuntu, BUT... this is a
+very enhanced OpenGL version of the original DOOM that supports high
+resolution, many special effects, _real_ 3D rendering, 6 DOF (not 2D, 
+made-to-look-like 3D as the original DOOM) - so looking up and down
+is real instead of y-shearing like Hexen - and many other features
+that make it technically more like the Quake engine than DOOM.
+
+I want the _original_ DOOM game! Low res, no shading, lighting that
+only has 4 indexes, etc.
+
+When I have free time, I'll do the work in this repo.
+
+-Greg Dolley
+
+Original README from John Carmack below:
+----------------------------------------------------------------------
 
 Here it is, at long last.  The DOOM source code is released for your
 non-profit use.  You still need real DOOM data to work with this code.
