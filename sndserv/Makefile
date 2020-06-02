@@ -7,7 +7,7 @@
 #
 
 CC=gcc
-CFLAGS=-O -DNORMALUNIX -DLINUX
+CFLAGS=-O -DNORMALUNIX -DLINUX -m32 -include /usr/include/errno.h
 LDFLAGS=
 LIBS=-lm
 
