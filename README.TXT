@@ -4,7 +4,7 @@
 My attempt to get DOOM running on Ubuntu 18.04 LTS under WSL2 for 
 Windows 10.
 
-I know there's the OpenDL "doomsday" port of DOOM 
+I know there's the OpenGL "doomsday" port of DOOM 
 (http://manpages.ubuntu.com/manpages/xenial/man6/doomsday.6.html)
 which was pretty easy to get running on WSL2 Ubuntu, BUT... this is a
 very enhanced OpenGL version of the original DOOM that supports high
